@@ -1,10 +1,8 @@
-# Vatican't  
-(apostrophe used for styling)  
-…is, strictly speaking, supposed to be a collection of helper libraries for DRGTK.
+# Giatros
+…is (so far) a framework of bite-sized helper libraries for DRGTK.  
+Keep them together but `require` only the ones you need.
 
-Given how `require` works in DRGTK currently and some other factors, I'm probably gonna be putting a single thing in each library.  
-To overuse a joke I made on Discord, if a library houses only a single book on display — it should be called a "church".  
-Thus, one could rather say that Vatican't is a collection of churches.
+Yes, I renamed it and removed the joke. Sorry if you liked it.
 
 ## nil_panic.rb
 Sick of pesky `nil`s getting into your arithmetics and DRGTK silently allowing them to spread like `NaN`s?  
@@ -21,3 +19,18 @@ Here's an example of the exception:
 Yup, it even tells you the operation that caused it along with the first operand.
 
 (You'll get a different error if `nil` was the first operand but that's a whole another story…)
+
+## array_sum.rb
+`Array#sum`  
+Did I already mention DRGTK is weird? So while you can use `Array#sum` in Ruby proper — it's not defined in DRGTK.  
+Well, surely, you can just `array.inject(:+)` like in ye olden times, right? …right? Not so fast.  
+Arithmetical operators in DRGTK are complete magic and sometimes decide to stop existing at all. Especially when you call `Array#inject` or `Array#reduce`.
+
+The workaround is to use the block overload of `reduce`/`inject` like this: `[4, 20].reduce{|sum, summand| sum + summand}`. So you could either use that monstrosity raw or `[4, 20].sum` if you `require array_sum.rb`.
+
+## array_median.rb
+`Array#median`  
+I've still no idea why a `median` method isn't already a part of Ruby or mRuby core but here you go for all your statistical needs.
+
+If you're unfamiliar with how `median` is calculated:  
+Sort a set and pick the middle or the average of 2 middle values depending on whether it is odd or even.
