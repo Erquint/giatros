@@ -1,4 +1,4 @@
-require '/lib/array_sum.rb'
+require '/lib/giatros/array_sum.rb'
 
 module Giatros
   Array.define_method :median do

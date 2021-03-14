@@ -1,4 +1,4 @@
-require '/lib/array_median.rb'
+require '/lib/giatros/array_median.rb'
 
 module Giatros
   module Frametimer
