@@ -6,7 +6,6 @@ module Giatros
       "an Array containing non-numeric types):\n#{self.inspect}.sum"\
         if self.any?{|value| !(Numeric === value)}
     return self.first if self.length == 1
-    output = self.reduce{|sum, summand| sum + summand}
-    return output
+    return self.reduce{|sum, summand| sum + summand}
   end
 end

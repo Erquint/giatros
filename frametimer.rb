@@ -7,18 +7,21 @@ module Giatros
     end
     
     def self.frametime
+      return @@frametime if @@frametime_baked
+      @@frametime = @@frametimes.median
+      @@frametime_baked = true
       return @@frametime
     end
     
     def self.fps
-      return 1 / @@frametime
+      return 1 / self.frametime
     end
     
     def self.frametime_label
       return {
         y: $gtk.args.grid.top,
         r: 255,
-        text: "%.0f ms/f" % (@@frametime * 1000)
+        text: "%.0f ms/f" % (self.frametime * 1000)
       }
     end
     
@@ -26,7 +29,7 @@ module Giatros
       return {
         y: $gtk.args.grid.top - 20,
         r: 255,
-        text: "%.0f FPS" % (1 / @@frametime)
+        text: "%.0f FPS" % (1 / self.frametime)
       }
     end
     
@@ -64,6 +67,7 @@ module Giatros
     
     @@timestamp = Time.now
     @@frametime = 0.016
+    @@frametime_baked = true
     @@frametimes = [@@frametime]
     @@clock_window = 60
     @@sprite =
@@ -79,14 +83,14 @@ module Giatros
       def tick args
         Frametimer.class_variable_get(:@@frametimes) <<
           Time.now - Frametimer.class_variable_get(:@@timestamp)
+        
         Frametimer.class_variable_set(:@@timestamp, Time.now)
         
-        offset = Frametimer.class_variable_get(:@@frametimes).length -
-          Frametimer.class_variable_get(:@@clock_window)
-        offset.times{Frametimer.class_variable_get(:@@frametimes).shift}
+        (Frametimer.class_variable_get(:@@frametimes).length -
+          Frametimer.class_variable_get(:@@clock_window))
+            .times{Frametimer.class_variable_get(:@@frametimes).shift}
         
-        Frametimer.class_variable_set(:@@frametime,
-          Frametimer.class_variable_get(:@@frametimes).median)
+        Frametimer.class_variable_set(:@@frametime_baked, false)
         super
       end
     end
