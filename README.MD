@@ -9,6 +9,7 @@ I suggest creating a `/lib/` directory beside your `/app/` and cloning the repo 
 A "plug-and-play" library for performance tracking of your project.  
 Just `require` it and feed the primitives it provides to DRGTK rendering pipeline like this: `args.outputs.labels << Giatros::Frametimer.frametime_label`.  
 *I could even have Frametimer do that last step for you but wanted you to be able to reposition, scale and color the primitives natively to your liking.*
+*Thinking on it… I should make a variant later.*
 
 Go check out the [basic sample](/samples/frametimer_basics.rb) if any of this isn't clear.
 
@@ -59,11 +60,13 @@ Yup, it even tells you the operation that caused it along with the first operand
 I've still no idea why a `median` method isn't already a part of Ruby or mRuby core but here you go for all your statistical needs.
 
 If you're unfamiliar with how `median` is calculated:  
-Sort a set and pick the middle or the average of 2 middle values depending on whether it is odd or even.
+Sort an array and pick the middle or the average of 2 middle values depending on whether the set length is odd or even.
 
 ## [Array#sum](/array_sum.rb) → `Numeric`
 Did I already mention DRGTK is weird? So while you can use `Array#sum` in Ruby proper — it's not defined in DRGTK.  
 Well, surely, you can just `array.inject(:+)` like in ye olden times, right… right? Not so fast.  
-Arithmetical operators in DRGTK are complete magic and sometimes decide to stop existing at all. Especially when you call `Array#inject` or `Array#reduce`.
+Arithmetical operators in DRGTK are held together by dark magic and a crumpled wad of duct tape.
+Sometimes they decide to stop existing at all if you're looking at them weird.
+Passing them as argument to `Array#inject` or `Array#reduce` counts as a shifty look.
 
 The workaround is to use the block overload of `reduce`/`inject` like this: `[4, 20].reduce{|sum, summand| sum + summand}`. So you could either use that monstrosity raw or `[4, 20].sum` if you `require array_sum.rb`.
