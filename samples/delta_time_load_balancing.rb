@@ -1,14 +1,21 @@
-require '/lib/frametimer.rb'
+require '/lib/giatros/frametimer.rb'
 
 def tick args
   if args.state.tick_count.zero?
-    $target = 31.62
-    $magic_coefficient = 240
+    $target = 1 / 30
+    $unit_load = 500e3
+    $load = 1e-3
+    $last_load = 1e-3
   end
+  
   if args.state.tick_count > 0
-    $load = $target - (Giatros::Frametimer.frametime_raw * $magic_coefficient)
-    # ((15 + Time.now.sec % 30)**2).times do
-    ($load.clamp(1, 60)**2).times do
+    # Load required to compensate.
+    $load = $target - Giatros::Frametimer.frametime_raw
+    # Preventing hysterical overcorrection.
+    $load = $load.clamp($last_load - 1e-5, $last_load + 1e-5)
+    $last_load = $load
+    
+    ($load * $unit_load).truncate.times do
       args.outputs.solids <<
       {
         x: rand(args.grid.w),

@@ -80,15 +80,15 @@ module Giatros
       }
     
     module Frametimer_tick
-      def tick args
+      def tick_core
         Frametimer.class_variable_get(:@@frametimes) <<
           Time.now - Frametimer.class_variable_get(:@@timestamp)
         
         Frametimer.class_variable_set(:@@timestamp, Time.now)
         
-        (Frametimer.class_variable_get(:@@frametimes).length -
-          Frametimer.class_variable_get(:@@clock_window))
-            .times{Frametimer.class_variable_get(:@@frametimes).shift}
+        Frametimer.class_variable_get(:@@frametimes).slice! 0,
+          (Frametimer.class_variable_get(:@@frametimes).length -
+            Frametimer.class_variable_get(:@@clock_window))
         
         Frametimer.class_variable_set(:@@frametime_baked, false)
         super
